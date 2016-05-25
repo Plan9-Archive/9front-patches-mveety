@@ -1,0 +1,19 @@
+diff -r 56eab579d51f sys/src/9/mkfile
+--- a/sys/src/9/mkfile	Mon May 16 22:55:30 2016 +0200
++++ b/sys/src/9/mkfile	Wed May 25 01:25:52 2016 -0400
+@@ -1,15 +1,7 @@
+ ARCH=\
+ 	bcm\
+-	kw\
+-	mtx\
+-	omap\
+ 	pc\
+ 	pc64\
+-	ppc\
+-	sgi\
+-	teg2\
+-	xen\
+-	zynq\
+ 
+ all:V:
+ 	for(i in $ARCH)@{

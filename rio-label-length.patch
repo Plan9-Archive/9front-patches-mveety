@@ -1,0 +1,12 @@
+diff -r e426cbc6663d sys/src/cmd/rio/rio.c
+--- a/sys/src/cmd/rio/rio.c	Fri Dec 11 14:18:06 2015 -0500
++++ b/sys/src/cmd/rio/rio.c	Sun Dec 13 00:27:33 2015 -0500
+@@ -685,7 +685,7 @@
+ static char*
+ shortlabel(char *s)
+ {
+-	enum { NBUF=60 };
++	enum { NBUF=25 };
+ 	static char buf[NBUF*UTFmax];
+ 	int i, k, l;
+ 	Rune r;

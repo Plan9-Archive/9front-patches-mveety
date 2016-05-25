@@ -1,0 +1,57 @@
+diff -r 4010ea197d3d sys/src/9/boot/bootrc
+--- a/sys/src/9/boot/bootrc	Thu Oct 22 07:48:26 2015 +0200
++++ b/sys/src/9/boot/bootrc	Sun Nov 01 15:29:18 2015 -0500
+@@ -90,6 +90,9 @@
+ 		}
+ 		if not
+ 			x=($x -u)
++		if(~ $autolog true || ~ $autolog yes || ~ $autolog 1)
++			if(! ~ $service cpu)
++				x=($x -T)
+ 		if(! ~ $#debugfactotum 0)
+ 			x=($x -p)
+ 		must $x
+@@ -103,6 +106,9 @@
+ 	if(~ $#$x 0) x=auth
+ 	if(! ~ $#$x 0 && test -x /bin/auth/secstore && test -f /mnt/factotum/ctl){
+ 		x=(auth/secstore -G factotum -s^$$x)
++		if(~ $autolog true || ~ $autolog yes || ~ $autolog 1)
++			if(! ~ $service cpu)
++				x=($x -n)
+ 		if(~ $service cpu)
+ 			$x -n >/mnt/factotum/ctl
+ 		if(~ $status *readnvram* || ! ~ $service cpu)
+diff -r 4010ea197d3d sys/src/cmd/auth/factotum/fs.c
+--- a/sys/src/cmd/auth/factotum/fs.c	Thu Oct 22 07:48:26 2015 +0200
++++ b/sys/src/cmd/auth/factotum/fs.c	Sun Nov 01 15:29:18 2015 -0500
+@@ -64,12 +64,18 @@
+ 	Dir d;
+ 	Proto *p;
+ 
++	askforkeys = 1;
+ 	trysecstore = 1;
+ 
+ 	ARGBEGIN{
+ 	case 'D':
+ 		chatty9p++;
+ 		break;
++	case 'T':
++		askforkeys = 1;
++		trysecstore = 1;
++		sflag = 1;
++		break;
+ 	case 'S':		/* server: read nvram, no prompting for keys */
+ 		askforkeys = 0;
+ 		trysecstore = 0;
+@@ -179,7 +185,10 @@
+ 			if((fd = open(smprint("%s/factotum/ctl", mtpt), OWRITE)) < 0)
+ 				sysfatal("can't open factotum: %r");
+ 			dup(fd, 1);
+-			execl("/bin/auth/secstore", "secstore", "-G", "factotum", nil);
++			if(sflag)
++				execl("/bin/auth/secstore", "secstore", "-n", "-G", "factotum", nil);
++			else
++				execl("/bin/auth/secstore", "secstore", "-G", "factotum", nil);
+ 			exits(nil);
+ 		}
+ 		waitpid();
