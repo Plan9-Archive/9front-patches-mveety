@@ -1,0 +1,12 @@
+diff -r 56eab579d51f sys/src/cmd/winwatch.c
+--- a/sys/src/cmd/winwatch.c	Mon May 16 22:55:30 2016 +0200
++++ b/sys/src/cmd/winwatch.c	Wed May 25 01:25:27 2016 -0400
+@@ -362,7 +362,7 @@
+ 	refreshwin();
+ 	redraw(screen, 1);
+ 	einit(Emouse|Ekeyboard);
+-	Etimer = etimer(0, 2500);
++	Etimer = etimer(0, 100); // was 2500
+ 
+ 	for(;;){
+ 		switch(eread(Emouse|Ekeyboard|Etimer, &e)){

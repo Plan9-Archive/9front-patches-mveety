@@ -1,0 +1,33 @@
+diff -r 79ff25393d25 sys/src/cmd/screenlock.c
+--- a/sys/src/cmd/screenlock.c	Tue Dec 08 20:26:17 2015 +0100
++++ b/sys/src/cmd/screenlock.c	Thu Dec 10 21:56:12 2015 -0500
+@@ -79,12 +79,17 @@
+ 			break;
+ 		} else if(c == '\n')
+ 			break;
+-		else if(c == '\b' && i > 0)
++		else if(c == '\b' && i > 0) {
++			print("\b");
+ 			--i;
+-		else if(c == ('u' & 037))
++		} else if(c == ('u' & 037))
+ 			i = 0;
+-		else
++		else {
++			print("*");
+ 			buf[i++] = c;
++		}
++	for(int x = 0;x < i; x++)
++		print("\b");
+ 	buf[i] = '\0';
+ }
+ 
+@@ -117,6 +122,8 @@
+ 		opened = 1;
+ 	}
+ 
++	print("Password: ");
++
+ 	for(;;){
+ 		if(chatty || !must)
+ 			fprint(2, "%s's screenlock password: ", user);
